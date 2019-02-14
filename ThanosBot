@@ -15,12 +15,12 @@ private Card[] hand;
   
   
   
-  if(HandEvaluator.evaluateHand() > 2)
+  if(HandEvaluator.evaluateHand(hand) > 2)
   {
   return RAISE;
   
   }
-  else if(HandEvaluator.evaluateHand() > 0)
+  else if(HandEvaluator.evaluateHand(hand) > 0)
   {
   return CALL;
   }
