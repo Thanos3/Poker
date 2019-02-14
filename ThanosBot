@@ -1,7 +1,10 @@
 public class ThanosBot implements Strategy 
 { 
-  public void deal(int seat, int handCategory, Card[] hand, TableView tableView)
+private Card[] hand;
+
+  public void deal(int seat, int handCategory, Card[] h, TableView tableView)
   {
+    hand = h;
   }
   
   
@@ -9,9 +12,23 @@ public class ThanosBot implements Strategy
 // returns FOLD, CALL, or RAISE 
   public int act() 
   { 
-    int randomAct = (int)(Math.random() * 3); 
-    return randomAct; 
+  
+  
+  
+  if(HandEvaluator.evaluateHand() > 2)
+  {
+  return RAISE;
+  
+  }
+  else if(HandEvaluator.evaluateHand() > 0)
+  {
+  return CALL;
+  }
+  
+  return FOLD;
+  
   } 
+  
   
   
 // returns which cards to exchange; 
