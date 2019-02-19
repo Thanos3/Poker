@@ -15,25 +15,25 @@ private Card[] hand;
   
   
   
-  if(HandEvaluator.evaluateHand(hand) >= 2)
+  if(HandEvaluator.evaluateHand(hand) >= 2)//2 pairs or higher
   {
   return RAISE;
   
   }
-  else if(HandEvaluator.evaluateHand(hand) > 0 )
+  else if(HandEvaluator.evaluateHand(hand) > 0 )//1 pair
   {
   return CALL;
   }
   
-  return FOLD;
+  return FOLD; //nothing in hand
   
   } 
   
-  
+  //we should probably add cases for if it is one card away from a flush, straight, etc
   
 // returns which cards to exchange; 
 // for example, {true, false, true, false, false} means discard cards at index 0 and 2 
-  public boolean[] exchange() 
+  public boolean[] exchange() //needs to be implemented
   { 
     boolean[] exchange = new boolean[5]; 
     for (int i=0; i<5; i++) 
