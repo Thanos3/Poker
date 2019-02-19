@@ -29,7 +29,7 @@ private Card[] hand;
   
   } 
   
-  //we should probably add cases for if it is one card away from a flush, straight, etc
+  //we need to add cases for if it is one card away from a flush, straight, etc. Can we edit hand evaluator?
   
 // returns which cards to exchange; 
 // for example, {true, false, true, false, false} means discard cards at index 0 and 2 
