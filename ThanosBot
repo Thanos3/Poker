@@ -26,14 +26,111 @@ private Card[] hand;
   }
   
   return FOLD; //nothing in hand
-  
+  //will be changed to call isClose
   } 
   
-  //we need to add cases for if it is one card away from a flush, straight, etc. Can we edit hand evaluator?
+
+
+  public static int[] isClose(Card[] theHand) //finds out if it is close to a straight/flush
+  {
+  int[] answer = new int[2]; //0 in first value means not close. 1 in first value means close. Second value means whitch card to swtich out.
+  answer[0] = 0;
+  for (int i = 1; i < hand.length; i++). //sorts the hand
+  {
+    for (int j = i; jh > 0; j--)
+    if (hand[j].getRank() > hand[j - 1].getRank())
+    {
+      Card savedCard = hand[j];
+      hand[j] = hand[j - 1];
+      hand[j - 1] = savedCard;
+    }
+  }
+  
+  //check if close to flush
+  int numSpade = 0;
+  int numClub = 0;
+  int numHeart = 0;
+  int numDiamond = 0;
+  for (int x = 0; x<hand.length; x++)
+  {
+    if (theHand[x].getSuit() == 0)
+    numSpade++;
+    if (theHand[x].getSuit() == 1)
+    numClub++;
+    if (theHand[x].getSuit() == 2)
+    numHeart++;
+    if (theHand[x].getSuit() == 3)
+    numDiamond++;
+  }
+  if(numSpade == 4)
+  {
+    for (int x = 0; x<hand.length; x++)
+    {
+      if (theHand[x].getSuit() != 0)
+      {
+        answer[0] = 1;
+        answer[1] = x;
+        return answer;
+      }
+    }
+  }
+  if(numClub == 4)
+  {
+    for (int x = 0; x<hand.length; x++)
+    {
+      if (theHand[x].getSuit() != 1)
+      {
+        answer[0] = 1;
+        answer[1] = x;
+        return answer;
+      }
+    }
+  }
+  if(numHeart == 4)
+  {
+    for (int x = 0; x<hand.length; x++)
+    {
+      if (theHand[x].getSuit() != 2)
+      {
+        answer[0] = 1;
+        answer[1] = x;
+        return answer;
+      }
+    }
+  }
+  if(numDiamond == 4)
+  {
+    for (int x = 0; x<hand.length; x++)
+    {
+      if (theHand[x].getSuit() != 3)
+      {
+        answer[0] = 1;
+        answer[1] = x;
+        return answer;
+      }
+    }
+  }
+  
+      
+  
+  //now check if close to straight
+  //not done
+  boolean hasMissing = false;
+  for (int x = 0; x < hand.length-1; x++)
+  {
+    if (hand[x] != hand[x+1]+1)
+    {
+      hasMissing = true;
+      if (hand
+      }
+        
+    }
+  
+  }
   
 // returns which cards to exchange; 
 // for example, {true, false, true, false, false} means discard cards at index 0 and 2 
-  public boolean[] exchange() //needs to be implemented
+  public boolean[] exchange() //needs to be edited, currently just random
   { 
     boolean[] exchange = new boolean[5]; 
     for (int i=0; i<5; i++) 
