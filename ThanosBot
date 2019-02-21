@@ -20,7 +20,7 @@ private Card[] hand;
   return RAISE;
   
   }
-  else if(HandEvaluator.evaluateHand(hand) > 0 || isClose(hand)[0] == 1 || highCard(hand) >= 10  )//1 pair
+  else if(HandEvaluator.evaluateHand(hand) > 0 || isClose(hand)[0] == 1 || highCard(hand)[0] >= 10  )//1 pair
   {
   return CALL;
   }
