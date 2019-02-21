@@ -130,13 +130,18 @@ private Card[] hand;
     }
   
   }
-  public static int[] highCard(Card[] h)//returns an array, with the first value being the rank and the second value being its location in your hand
+  public static int[] highCard(Card[] h)//returns an array, with the first value being the rank, the second value being its location in your hand, and the third being the total above 10
   {
-  int[] rankAndIndex = new int[2];
+  int[] rin = new int[3];
   int high = 0;
   int index = 0;
+  int numAboveTen = 0;
   for(int x = 0; x < h.length; x ++)
   {
+  if(h[x].getRank>10)
+  {
+  numAboveTen ++;
+  }
   if(h[x].getRank() > high)
   {
   high = h[x].getRank();
@@ -145,9 +150,10 @@ private Card[] hand;
   }
 
   }
-  rankAndIndex[0] = high;
-  rankAndIndex[1] = index;
-  return rankAndIndex
+  rin[0] = high;
+  rin[1] = index;
+  rin[2] = numAboveTen;
+  return rin
   }
   
   
