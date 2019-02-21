@@ -1,10 +1,14 @@
 public class ThanosBot implements Strategy 
 { 
 private Card[] hand;
+private int playerSeat;
+private int phandCategory;
 
   public void deal(int seat, int handCategory, Card[] h, TableView tableView)
   {
     hand = h;
+    playerSeat = seat;
+    phandCategory = handCategory;
   }
   
   
@@ -118,16 +122,7 @@ private Card[] hand;
   
   //now check if close to straight
   //not done
-  boolean hasMissing = false;
-  for (int x = 0; x < hand.length-1; x++)
-  {
-    if (hand[x] != hand[x+1]+1)
-    {
-      hasMissing = true;
-      if (hand
-      }
-        
-    }
+  
   
   }
   public static int[] highCard(Card[] h)//returns an array, with the first value being the rank, the second value being its location in your hand, and the third being the total above 10
