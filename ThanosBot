@@ -130,7 +130,7 @@ private Card[] hand;
     }
   
   }
-  public static int[] highCard(Card[] h)
+  public static int[] highCard(Card[] h)//returns an array, with the first value being the rank and the second value being its location in your hand
   {
   int[] rankAndIndex = new int[2];
   int high = 0;
