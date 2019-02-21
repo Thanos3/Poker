@@ -20,13 +20,15 @@ private Card[] hand;
   return RAISE;
   
   }
-  else if(HandEvaluator.evaluateHand(hand) > 0 )//1 pair
+  else if(HandEvaluator.evaluateHand(hand) > 0 || isClose(hand)[0] == 1 || highCard(hand) >= 10  )//1 pair
   {
   return CALL;
   }
-  
+  else
+  {
   return FOLD; //nothing in hand
-  //will be changed to call isClose
+  
+  }
   } 
   
 
@@ -127,6 +129,26 @@ private Card[] hand;
     }
   
   }
+  public static int[] highCard(Card[] h)
+  {
+  int[] rankAndIndex = new int[2];
+  int high = 0;
+  int index = 0;
+  for(int x = 0; x < h.length; x ++)
+  {
+  if(h[x].getRank() > high)
+  {
+  high = h[x].getRank();
+  index = x;
+  
+  }
+
+  }
+  rankAndIndex[0] = high;
+  rankAndIndex[1] = index;
+  return rankAndIndex
+  }
+  
   
 // returns which cards to exchange; 
 // for example, {true, false, true, false, false} means discard cards at index 0 and 2 
