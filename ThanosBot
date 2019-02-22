@@ -3,12 +3,13 @@ public class ThanosBot implements Strategy
     private Card[] hand;
     private int playerSeat;
     private int phandCategory;
-
+    private int turn;
     public void deal(int seat, int handCategory, Card[] h, TableView tableView)
     {
         hand = h;
         playerSeat = seat;
         phandCategory = handCategory;
+        turn =1;
     }
 
     // called when it's this player's turn during betting 
@@ -32,7 +33,9 @@ public class ThanosBot implements Strategy
             return FOLD; //nothing in hand
 
         }
-    } 
+  turn ++;
+  
+  } 
 
 
     public static int[] isClose(Card[] theHand) //finds out if it is close to a straight/flush
