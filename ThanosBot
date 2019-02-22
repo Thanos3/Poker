@@ -42,14 +42,14 @@ private int phandCategory;
   int[] answer = new int[2]; //0 in first value means not close. 1 in first value means close. Second value means whitch card to swtich out.
   answer[0] = 0;
   answer[1] = 5; //5 means that it is not applicable
-  for (int i = 1; i < hand.length; i++). //sorts the hand
+  for (int i = 1; i < theHand.length; i++) //sorts the hand
   {
     for (int j = i; jh > 0; j--)
-    if (hand[j].getRank() > hand[j - 1].getRank())
+    if (theHand[j].getRank() > theHand[j - 1].getRank())
     {
-      Card savedCard = hand[j];
-      hand[j] = hand[j - 1];
-      hand[j - 1] = savedCard;
+      Card savedCard = theHand[j];
+      theHand[j] = theHand[j - 1];
+      theHand[j - 1] = savedCard;
     }
   }
   
@@ -121,10 +121,34 @@ private int phandCategory;
       
   
   //now check if close to straight
-  //not done
+  if (theHand[4].getRank() - theHand[1].getRank())
+  {
+  answer[0] = 1;
+  answer[1] = 0;
+  return answer;
+  }
+  if (theHand[3].getRank() - theHand[0].getRank())
+  {
+  answer[0] = 1;
+  answer[1] = 4;
+  return answer;
+  }
   
+  
+  if (theHand[4].getRank() == 14) //ace at the end
+  {
+  Card temp = theHand[4].getRank();
+  for (int y = theHand.length -1; y > 0; y--)
+  {
+  theHand[y] = theHand[y-1];
+  }
+  theHand[0] = temp; //puts ace at the front
+  return isClose(theHand); //runs same method with ace acting as value 1
+  }
+  return answer;
   
   }
+  
   public static int[] highCard(Card[] h)//returns an array, with the first value being the rank, the second value being its location in your hand, and the third being the total above 10
   {
   int[] rin = new int[3];
@@ -148,7 +172,7 @@ private int phandCategory;
   rin[0] = high;
   rin[1] = index;
   rin[2] = numAboveTen;
-  return rin
+  return rin;
   }
   
   
