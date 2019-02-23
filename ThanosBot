@@ -20,7 +20,7 @@ public class ThanosBot implements Strategy
     // returns FOLD, CALL, or RAISE 
     public int act() 
     { 
-    if(table.getBet()==4|| table.getPot() == 9)
+    if(table.getCall()==4|| table.getPot() == 9)
 {
 
     if(HandEvaluator.evaluateHand(hand) >= 2)//2 pairs or higher
