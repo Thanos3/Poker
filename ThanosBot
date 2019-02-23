@@ -4,26 +4,44 @@ public class ThanosBot implements Strategy
     private int playerSeat;
     private int phandCategory;
     private int turn;
+    private int numRaises;
+    private tableView table;
     public void deal(int seat, int handCategory, Card[] h, TableView tableView)
     {
         hand = h;
         playerSeat = seat;
         phandCategory = handCategory;
-        turn =1;
+        turn = 1;
+        numRaises = 0;
+        table = tableview;
     }
 
     // called when it's this player's turn during betting 
     // returns FOLD, CALL, or RAISE 
     public int act() 
     { 
+    if(table.getBet()==4|| table.getPot() == 9)
+{
 
-  
-        if(HandEvaluator.evaluateHand(hand) >= 2)//2 pairs or higher
+    if(HandEvaluator.evaluateHand(hand) >= 2)//2 pairs or higher
+       
+            return CALL;
+   
+   else
+        {
+
+            return FOLD; //nothing in hand
+
+        }
+}
+  if(turn == 1)
+  {
+  if(HandEvaluator.evaluateHand(hand) >= 2)//2 pairs or higher
         {
             return RAISE;
 
         }
-        else if(HandEvaluator.evaluateHand(hand) > 0 || isClose(hand)[0] == 1 || highCard(hand)[0] >= 10  )//1 pair
+        else if(HandEvaluator.evaluateHand(hand) > 0 || isClose(hand)[0] == 1 || highCard(hand)[0] >= 10  )//1 pair or chance at straight/flush or high card
         {
             return CALL;
         }
@@ -36,13 +54,34 @@ public class ThanosBot implements Strategy
   turn ++;
   
   } 
+  else
+  {
+  
+  if(HandEvaluator.evaluateHand(hand) >= 2)//2 pairs or higher
+        {
+            return RAISE;
+
+        }
+        else if(HandEvaluator.evaluateHand(hand) > 0 ||  highCard(hand)[0] > 10  )//1 pair  or high card(face cards only)
+        {
+            return CALL;
+        }
+        else
+        {
+
+            return FOLD; //nothing in hand
+
+        }
+  
+  }
+  }
 
 
     public static int[] isClose(Card[] theHand) //finds out if it is close to a straight/flush
     {
-        int[] answer = new int[2]; //0 in first value means not close. 1 in first value means close. Second value means whitch card to swtich out.
+        int[] answer = new int[2]; //0 in first value means not close. 1 in first value means 4 fit the characteristics of a straight/flush. Second value means which card to exchange.
         answer[0] = 0;
-        answer[1] = 5; //5 means that it is not applicable
+        answer[1] = 5; //5 is simply a placeholder for not applicable when it is not close
         for (int i = 1; i < theHand.length; i++) //sorts the hand
         {
             for (int j = i; j > 0; j--)
@@ -120,7 +159,7 @@ public class ThanosBot implements Strategy
         }
 
   
-        //now check if close to straight
+        //now check if close to straight, looking for higher rank straights first
         if (theHand[4].getRank() - theHand[1].getRank() == 4)
         {
             answer[0] = 1;
@@ -148,7 +187,7 @@ public class ThanosBot implements Strategy
 
     }
 
-    public static int[] highCard(Card[] h)//returns an array, with the first value being the rank, the second value being its location in your hand, and the third being the total above 10
+    public static int[] highCard(int[] h)//returns an array, with the first value being the rank, the second value being its location in your hand, and the third being the total above 10
     {
         int[] rin = new int[3];
         int high = 0;
