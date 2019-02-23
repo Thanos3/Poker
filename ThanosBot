@@ -215,18 +215,22 @@ public class ThanosBot implements Strategy
 
     // returns which cards to exchange; 
     // for example, {true, false, true, false, false} means discard cards at index 0 and 2 
-    public boolean[] exchange() //needs to be edited, currently just random
+    public boolean[] exchange()  
     { 
         boolean[] exchange = new boolean[5]; 
-        for (int i=0; i<5; i++) 
-        { 
-            int random = (int)(Math.random() * 2); 
-            if (random==0) 
-                exchange[i] = true; 
-            else 
-                exchange[i] = false; 
-        } 
-        return exchange; 
+       int[] x = isClose(hand);
+       if(x[1] < 5);
+      exchange[x[1]] = true;
+      else if (handEvaluator.evaluateHand() == 1)
+      {
+      
+      }
+      else if(handEvaluator.evaluateHand() == 2)
+      {}
+      else if(handEvaluator.evaluateHand() == 3)
+      {}
+       return exchange;
+       
     } 
 
     public void exchanged(int handCategory, Card[] hand)
