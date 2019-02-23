@@ -93,7 +93,7 @@ public class ThanosBot implements Strategy
                 }
         }
 
-        //check if close to flush
+        //check if close to flush, since it is considered better than a straight at the showdown
         int numSpade = 0;
         int numClub = 0;
         int numHeart = 0;
