@@ -215,6 +215,7 @@ public class ThanosBot implements Strategy
 
     // returns which cards to exchange; 
     // for example, {true, false, true, false, false} means discard cards at index 0 and 2 
+    //have the basic framework, need to figure out what to exchange in different scenarios
     public boolean[] exchange()  
     { 
         boolean[] exchange = new boolean[5]; 
