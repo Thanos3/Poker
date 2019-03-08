@@ -225,9 +225,15 @@ public class ThanosBot implements Strategy
       else if (handEvaluator.evaluateHand() == 1)
       {
       
+      int x = 
+      
       }
       else if(handEvaluator.evaluateHand() == 2)
-      {}
+      {
+      
+      
+      
+      }
       else if(handEvaluator.evaluateHand() == 3)
       {}
        return exchange;
