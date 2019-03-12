@@ -1,4 +1,4 @@
-public class LoggerPro implements Strategy 
+public class LookAtThisDuude implements Strategy 
 { 
     private Card[] hand;
     private int playerSeat;
@@ -212,6 +212,15 @@ public class LoggerPro implements Strategy
         rin[2] = numAboveTen;
         return rin;
     }
+    
+//looks for combos(e.g. pair, 3 of a kind, 2 pair, 4 of a kind)    
+public boolean[] findCombos(card[] c)
+{
+if(evaluateHand(c))
+
+}
+
+
 
     // returns which cards to exchange; 
     // for example, {true, false, true, false, false} means discard cards at index 0 and 2 
