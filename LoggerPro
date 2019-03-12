@@ -1,4 +1,4 @@
-public class ThanosBot implements Strategy 
+public class LoggerPro implements Strategy 
 { 
     private Card[] hand;
     private int playerSeat;
