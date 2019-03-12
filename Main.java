@@ -8,7 +8,7 @@ public class Main
     HumanStrategy human = new HumanStrategy();
     t.setPlayer(0, new Player(human));
     for (int seat = 1; seat < 3; seat++)
-      t.setPlayer(seat, new Player(new ThanosBot()));
+      t.setPlayer(seat, new Player(new LookAtThisDuude()));
     TextDisplay d = new TextDisplay(t, true);
     t.setDisplay(d);
     human.setDisplay(d);
