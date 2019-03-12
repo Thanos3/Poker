@@ -216,7 +216,47 @@ public class LookAtThisDuude implements Strategy
 //looks for combos(e.g. pair, 3 of a kind, 2 pair, 4 of a kind)    
 public boolean[] findCombos(card[] c)
 {
-if(evaluateHand(c))
+boolean[] spots = new boolean[5];
+
+//looks for 4 of a kind, tries to get a high card
+if(evaluateHand(c) == 7)
+{
+if(c[0] != c[1])
+{
+if(c[0].getRank() <10)
+{
+spots[0] = true;
+}
+}
+else
+{
+if(c[0].getRank() <10)
+{
+spots[4] = true;
+}
+
+return spots;
+}
+else if(evaluateHand(c) == 3)
+{
+if(c[0] != c[1])
+{
+if(c[1] != c[2])
+{
+spots[0] = true;
+spots[1] = true;
+return spots;
+}
+spots[0]= true;
+spots[4] = true;
+return spots;
+}
+spots[3] = true;
+spots[4] = true;
+return spots;
+}
+
+}
 
 }
 
