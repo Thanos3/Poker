@@ -31,7 +31,6 @@ public class Table
       }
     }
     
-    //need to add cards to the deck and then shuffle it
     dealer = (int)(Math.random() * numSeats);
   }
   
@@ -67,8 +66,6 @@ public class Table
     while (players[dealer] == null)
       dealer = (dealer - 1 + players.length) % players.length;
     
-    activeSeat = dealer - 1;
-    activeSeat = (activeSeat + players.length) % players.length;
     ante();
     shuffle();
     deal();
@@ -79,10 +76,6 @@ public class Table
       if (getNumActivePlayers() > 1)
         bet();
     }
-    
-    showDown = true;
-    if (display != null) display.update();
-    showDown = false;
     
     ArrayList<Integer> winningSeats = new ArrayList<Integer>();
     for (int i = 0; i < players.length; i++)
@@ -113,14 +106,20 @@ public class Table
     for(int i = 0; i < winningSeats.size(); i++)
       players[winningSeats.get(i)].addChips(winnings);
     pot = 0;
-
+    
+    //notify display to show results of this round
+    showDown = true;
+    if (display != null) display.update();
+    
     //notify players that round has ended before resetting all for next round
     for (int i = 0; i < players.length; i++)
     {
       if (players[i] != null)
         players[i].roundEnded();
     }
-        
+    
+    showDown = false;
+    
     deckPlace = 0;
     dealer--;
     dealer = (dealer + players.length) % players.length;
@@ -181,6 +180,9 @@ public class Table
   
   public void bet()
   {
+    activeSeat = dealer - 1;
+    activeSeat = (activeSeat + players.length) % players.length;
+    
     call = 0;  //biggest bet is 0 so far
     int called = 0;  //number of players who have called the biggest bet
     int playersLeft = getNumActivePlayers();
@@ -191,31 +193,22 @@ public class Table
       {
         if (display != null) display.update();
         int option = activePlayer.act();
+        
+        if (option == Strategy.FOLD && call == activePlayer.getBet() ||
+            option == Strategy.RAISE && call == MAX_RAISES)
+          option = Strategy.CALL;
+        
         if(option == Strategy.FOLD)
         {
-          if(call == activePlayer.getBet())
-            called++;
-          else
-          {
-            activePlayer.fold();
-            playersLeft--;
-          }
+          activePlayer.fold();
+          playersLeft--;
         }
         else if(option == Strategy.RAISE)
         {
-          if(call == MAX_RAISES)
-          {
-            activePlayer.removeChips(call - activePlayer.getBet());
-            activePlayer.setBet(call);
-            called++;        
-          }
-          else
-          {
-            call++;
-            activePlayer.removeChips(call - activePlayer.getBet());
-            activePlayer.setBet(call);
-            called = 1;
-          }
+          call++;
+          activePlayer.removeChips(call - activePlayer.getBet());
+          activePlayer.setBet(call);
+          called = 1;
         }
         else if(option == Strategy.CALL)
         {
@@ -225,7 +218,15 @@ public class Table
         }
         else
           throw new RuntimeException("illegal action " + option + " returned by seat " + activeSeat);
+        
+        for (Player p : players)
+        {
+          if (p != null)
+            p.playerActed(activeSeat, option);
+        }
+        
       }
+      
       activeSeat = activeSeat - 1;
       activeSeat = (activeSeat + players.length) % players.length;
     }
@@ -244,6 +245,9 @@ public class Table
   
   public void exchange()
   {
+    activeSeat = dealer - 1;
+    activeSeat = (activeSeat + players.length) % players.length;
+    
     for (int i = 0; i < players.length; i++)
     {
       Player activePlayer = players[activeSeat];
@@ -263,6 +267,12 @@ public class Table
         int handCategory = PokerUtil.evaluateHand(hand);
         activePlayer.setHand(handCategory, hand);
         activePlayer.exchanged();
+        
+        for (Player p : players)
+        {
+          if (p != null)
+            p.playerExchanged(activeSeat, activePlayer.getNumCardsExchanged());
+        }
       }
       activeSeat--;
       activeSeat = (activeSeat + players.length) % players.length;

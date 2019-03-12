@@ -57,7 +57,7 @@ public class TableView
           s2 += " ";
         
         s2 += "Seat " + i + ":  ";
-        if (t.showDown())
+        if (getHand(i) != null)
           s2 += t.getPlayer(i).toString();
         else
           s2 += t.getPlayer(i).publicToString();
@@ -74,18 +74,27 @@ public class TableView
     return t.getCall();
   }
   
+  public int getID(int seat)
+  {
+    return t.getPlayer(seat).getID();
+  }
+  
   //only returns hands that have been shown to table
   //returns copies of arrays, so original hands cannot be changed
   public Card[] getHand(int seat)
   {
-    if (t.showDown() && !t.getPlayer(seat).hasFolded())
+    if (!t.showDown())
+      return null;
+    
+    int numUnfolded = 0;
+    for (int i = 0; i < t.getSize(); i++)
     {
-      Card[] hand = t.getPlayer(seat).getHand();
-      Card[] copy = new Card[hand.length];
-      for (int i = 0; i < hand.length; i++)
-        copy[i] = hand[i];
-      return copy;
+      if (t.getPlayer(i) != null && !t.getPlayer(i).hasFolded())
+        numUnfolded++;
     }
+    
+    if (numUnfolded >= 2 && !t.getPlayer(seat).hasFolded())
+      return PokerUtil.copy(t.getPlayer(seat).getHand());
     else
       return null;
   }

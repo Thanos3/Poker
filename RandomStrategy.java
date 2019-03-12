@@ -37,4 +37,12 @@ public class RandomStrategy implements Strategy
   public void roundEnded()
   {
   }
+  
+  public void playerActed(int seat, int action)
+  {
+  }
+  
+  public void playerExchanged(int seat, int numCardsExchanged)
+  {
+  }
 } 

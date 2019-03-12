@@ -82,6 +82,8 @@ public class Player
   public boolean[] exchange()
   {
     boolean[] cardsToExchange = strategy.exchange();
+    if (cardsToExchange == null || cardsToExchange.length != 5)
+      throw new RuntimeException("bad exchange from " + strategy);
     numCardsExchanged = 0;
     for(int i = 0; i < 5; i++)
     {
@@ -110,6 +112,11 @@ public class Player
   public void removeChips(int chips) //removes from stack
   {
     stack = stack - chips;
+  }
+  
+  public void setStack(int chips)
+  {
+    stack = chips;
   }
   
   public void setHand(int newHandCategory, Card[] newHand)
@@ -158,5 +165,20 @@ public class Player
   public void roundEnded()
   {
     strategy.roundEnded();
+  }
+  
+  public Strategy getStrategy()
+  {
+    return strategy;
+  }
+  
+  public void playerActed(int seat, int action)
+  {
+    strategy.playerActed(seat, action);
+  }
+  
+  public void playerExchanged(int seat, int numCardsExchanged)
+  {
+    strategy.playerExchanged(seat, numCardsExchanged);
   }
 }

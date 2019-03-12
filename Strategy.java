@@ -17,4 +17,6 @@ public interface Strategy
   boolean[] exchange();
   void exchanged(int handCategory, Card[] hand);
   void roundEnded();
+  void playerActed(int seat, int action);
+  void playerExchanged(int seat, int numCardsExchanged);
 }

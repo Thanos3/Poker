@@ -203,4 +203,13 @@ public class PokerUtil
     }
     return 0;
   }
+  
+  //returns a copy of this hand, so that the copy can be changed without changing the original
+  public static Card[] copy(Card[] hand)
+  {
+    Card[] copy = new Card[hand.length];
+    for (int i = 0; i < hand.length; i++)
+      copy[i] = hand[i];
+    return copy;
+  }
 }
