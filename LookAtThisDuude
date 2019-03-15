@@ -274,7 +274,12 @@ return spots;
       else if (handEvaluator.evaluateHand() == 1)
       {
       
-      int x = 
+     if(hand[0].getRank().equals( hand[1].getRank()))
+     {
+     exchange[2] = true;
+     exchange[3] = true;
+     exchange[4] = true;
+     }
       
       }
       else if(handEvaluator.evaluateHand() == 2)
