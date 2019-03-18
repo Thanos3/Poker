@@ -255,10 +255,28 @@ spots[3] = true;
 spots[4] = true;
 return spots;
 }
+else if(evaluateHand(c) == 2)
+{
+if(c[0].getRank() != c[1].getRank())
+{
+spots[0] = true;
+return spots;
 
 }
-
+if(c[2].getRank() != c[3].getRank())
+{
+spots[2] = true;
+return spots;
 }
+else
+{
+spots[4] = true;
+return spots;
+}
+}
+}
+
+
 
 
 
@@ -296,7 +314,12 @@ return spots;
       }
       }
       else if(handEvaluator.evaluateHand() == 3)
-      {}
+      {
+      
+      
+      
+      
+      }
        return exchange;
        
     } 
