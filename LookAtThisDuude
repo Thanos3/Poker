@@ -217,14 +217,28 @@ public class LookAtThisDuude implements Strategy
 //returns array of booleans of the cards that should be removed
 public boolean[] findCombos(card[] c)
     {
+    for (int i = 1; i < c.length; i++) //sorts the hand
+        {
+            for (int j = i; j > 0; j--)
+                if (c[j].getRank() > c[j - 1].getRank())
+                {
+                    Card savedCard = c[j];
+                    c[j] = c[j - 1];
+                    c[j - 1] = savedCard;
+                }
+        }
+       
+    
         boolean[] spots = new boolean[5];
+        
+       
 
-        //looks for 4 of a kind, tries to get a high card //question: shouldn't we fold if we only have a high card?
-        if(evaluateHand(c) == 7)
+        //looks for 4 of a kind, tries to get a high card for the 5th
+        if(HandEvaluator.evaluateHand(c) == 7)
         {
             if(c[0] != c[1])
             {
-                if(c[0].getRank() <10)
+                if(c[0].getRank() <10) //if the non 4 of a kind is less than 10, switch it
                 {
                     spots[0] = true;
                 }
@@ -238,25 +252,25 @@ public boolean[] findCombos(card[] c)
 
                 return spots;
             }
-            else if(evaluateHand(c) == 3)
+            else if(HandEvaluator.evaluateHand(c) == 3) //three of a kind
             {
-                if(c[0] != c[1])
+                if(c[0] != c[1]) 
                 {
-                    if(c[1] != c[2])
+                    if(c[1] != c[2]) 
                     {
-                        spots[0] = true;
+                        spots[0] = true; //switch out the first two
                         spots[1] = true;
                         return spots;
                     }
-                    spots[0]= true;
+                    spots[0]= true; //switch out first and last
                     spots[4] = true;
                     return spots;
                 }
-                spots[3] = true;
+                spots[3] = true; //swtich out the last two
                 spots[4] = true;
                 return spots;
             }
-            else if(evaluateHand(c) == 2)
+            else if(HandEvaluator.evaluateHand == 2) //two pairs
             {
                 if(c[0].getRank() != c[1].getRank())
                 {
@@ -274,7 +288,40 @@ public boolean[] findCombos(card[] c)
                     spots[4] = true;
                     return spots;
                 }
+            } 
+            else if (HandEvaluator.evaluateHand == 1) //1 pair
+            {
+                if(c[0].getRank() == c[1].getRank())
+                {
+                    c[2] = true;
+                    c[3] = true;
+                    c[4] = true;
+                    return spots;
+                }
+                else if(c[1].getRank() == c[2].getRank())
+                {
+                    c[0] = true;
+                    c[3] = true;
+                    c[4] = true;
+                    return spots;
+                }
+                else if(c[2].getRank() == c[3].getRank())
+                {
+                    c[0] = true;
+                    c[1] = true;
+                    c[4] = true;
+                    return spots;
+                }
+                else if(c[3].getRank() == c[4].getRank())
+                {
+                    c[0] = true;
+                    c[1] = true;
+                    c[2] = true;
+                    return spots;
+                }
+
             }
+            return spots;
         }
 
 
@@ -287,42 +334,29 @@ public boolean[] findCombos(card[] c)
     public boolean[] exchange()  
     { 
         boolean[] exchange = new boolean[5]; 
-       int[] x = isClose(hand);
-       if(x[1] < 5);
-      exchange[x[1]] = true;
-      else if (handEvaluator.evaluateHand() == 1)
-      {
-      
-     if(hand[0].getRank() == hand[1].getRank())
-     {
-     exchange[2] = true;
-     exchange[3] = true;
-     exchange[4] = true;
-     }
-      
-      }
-      else if(handEvaluator.evaluateHand() == 2)
-      {
-      
-      if(hand[0].getRank() == hand[1].getRank())
-      {
-      if(hand[2].getRank() == hand[3].getRank())
-      {
-      exchange[4] = true;     
-      
+        
+        if (HandEvaluator.evaluateHand(hand) == 7) //if a straight flush, don't switch anything
+        return exchange;
+        
+        if (HandEvaluator.evaluateHand(hand) == 6) //if a 4 of a kind, use findCombos to find what to replace
+        return findCombos(hand);
+        
+        if (HandEvaluator.evaluateHand(hand) == 5) /if a full house, don't switch anything
+        return exchange;
+        
+       int[] x = isClose(hand); //now see if it is close to a flush or straight
+       if(x[0] == 1) //it is close
+       {
+            exchange[x[1]] = true; 
+            return exchange;
       }
       
-      }
-      }
-      else if(handEvaluator.evaluateHand() == 3)
-      {
-      
-      
-      
-      
-      }
-       return exchange;
+      if (HandEvaluator.evaluateHand(hand) == 3 || HandEvaluator.evaluateHand(hand) == 2 || HandEvaluator.evaluateHand(hand) == 1) //if 3 of a kind, 2 pairs, or 1 pair, return findCombos of the hand
+       return findCombos(hand);
        
+       //we could add a case for replacing everything but the high card. But i think we just fold in that case.
+       
+       return exchange;
     } 
 
     public void exchanged(int handCategory, Card[] hand)
