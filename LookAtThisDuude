@@ -213,68 +213,69 @@ public class LookAtThisDuude implements Strategy
         return rin;
     }
     
-//looks for combos(e.g. pair, 3 of a kind, 2 pair, 4 of a kind)    
+//looks for combos(e.g. pair, 3 of a kind, 2 pair, 4 of a kind)
+//returns array of booleans of the cards that should be removed
 public boolean[] findCombos(card[] c)
-{
-boolean[] spots = new boolean[5];
+    {
+        boolean[] spots = new boolean[5];
 
-//looks for 4 of a kind, tries to get a high card
-if(evaluateHand(c) == 7)
-{
-if(c[0] != c[1])
-{
-if(c[0].getRank() <10)
-{
-spots[0] = true;
-}
-}
-else
-{
-if(c[0].getRank() <10)
-{
-spots[4] = true;
-}
+        //looks for 4 of a kind, tries to get a high card //question: shouldn't we fold if we only have a high card?
+        if(evaluateHand(c) == 7)
+        {
+            if(c[0] != c[1])
+            {
+                if(c[0].getRank() <10)
+                {
+                    spots[0] = true;
+                }
+            }
+            else
+            {
+                if(c[0].getRank() <10)
+                {
+                    spots[4] = true;
+                }
 
-return spots;
-}
-else if(evaluateHand(c) == 3)
-{
-if(c[0] != c[1])
-{
-if(c[1] != c[2])
-{
-spots[0] = true;
-spots[1] = true;
-return spots;
-}
-spots[0]= true;
-spots[4] = true;
-return spots;
-}
-spots[3] = true;
-spots[4] = true;
-return spots;
-}
-else if(evaluateHand(c) == 2)
-{
-if(c[0].getRank() != c[1].getRank())
-{
-spots[0] = true;
-return spots;
+                return spots;
+            }
+            else if(evaluateHand(c) == 3)
+            {
+                if(c[0] != c[1])
+                {
+                    if(c[1] != c[2])
+                    {
+                        spots[0] = true;
+                        spots[1] = true;
+                        return spots;
+                    }
+                    spots[0]= true;
+                    spots[4] = true;
+                    return spots;
+                }
+                spots[3] = true;
+                spots[4] = true;
+                return spots;
+            }
+            else if(evaluateHand(c) == 2)
+            {
+                if(c[0].getRank() != c[1].getRank())
+                {
+                    spots[0] = true;
+                    return spots;
 
-}
-if(c[2].getRank() != c[3].getRank())
-{
-spots[2] = true;
-return spots;
-}
-else
-{
-spots[4] = true;
-return spots;
-}
-}
-}
+                }
+                if(c[2].getRank() != c[3].getRank())
+                {
+                    spots[2] = true;
+                    return spots;
+                }
+                else
+                {
+                    spots[4] = true;
+                    return spots;
+                }
+            }
+        }
 
 
 
