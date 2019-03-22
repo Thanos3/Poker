@@ -349,7 +349,7 @@ public class ThisDuude implements Strategy
             return findCombos(hand);
 
         //we could add a case for replacing everything but the high card. But i think we just fold in that case.
-
+        // if we have nothing, we don't need to take a chance on that. We can play safe and preserve our chips for a better hand. 
         return exchange;
     } 
 
