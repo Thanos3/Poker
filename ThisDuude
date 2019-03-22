@@ -38,20 +38,21 @@ public class ThisDuude implements Strategy
         {
             if(HandEvaluator.evaluateHand(hand) >= 2)//2 pairs or higher
             {
+                turn++;
                 return RAISE;
 
             }
             else if(HandEvaluator.evaluateHand(hand) > 0 || isClose(hand)[0] == 1 || highCard(hand)[0] >= 10  )//1 pair or chance at straight/flush or high card
             {
+                turn++;
                 return CALL;
             }
             else
             {
-
+                turn++; 
                 return FOLD; //nothing in hand
 
             }
-            turn ++;
 
         } 
         else
@@ -74,6 +75,7 @@ public class ThisDuude implements Strategy
             }
 
         }
+
     }
 
     public static int[] isClose(Card[] theHand) //finds out if it is close to a straight/flush
@@ -185,7 +187,7 @@ public class ThisDuude implements Strategy
 
     }
 
-    public static int[] highCard(int[] h)//returns an array, with the first value being the rank, the second value being its location in your hand, and the third being the total above 10
+    public static int[] highCard(Card[] h)//returns an array, with the first value being the rank, the second value being its location in your hand, and the third being the total above 10
     {
         int[] rin = new int[3];
         int high = 0;
@@ -227,7 +229,7 @@ public class ThisDuude implements Strategy
         }
 
         boolean[] spots = new boolean[5];
-       
+
         //looks for 4 of a kind, tries to get a high card for the 5th
         if(HandEvaluator.evaluateHand(c) == 7)
         {
@@ -247,79 +249,78 @@ public class ThisDuude implements Strategy
                 }
                 return spots;
             }
-            if(HandEvaluator.evaluateHand(c) == 3) //three of a kind
+        }
+        if(HandEvaluator.evaluateHand(c) == 3) //three of a kind
+        {
+            if(c[0] != c[1]) 
             {
-                if(c[0] != c[1]) 
+                if(c[1] != c[2]) 
                 {
-                    if(c[1] != c[2]) 
-                    {
-                        spots[0] = true; //switch out the first two
-                        spots[1] = true;
-                        return spots;
-                    }
-                    spots[0]= true; //switch out first and last
-                    spots[4] = true;
+                    spots[0] = true; //switch out the first two
+                    spots[1] = true;
                     return spots;
                 }
-                spots[3] = true; //swtich out the last two
+                spots[0]= true; //switch out first and last
                 spots[4] = true;
                 return spots;
             }
-            else if(HandEvaluator.evaluateHand(c) == 2) //two pairs
-            {
-                if(c[0].getRank() != c[1].getRank())
-                {
-                    spots[0] = true;
-                    return spots;
-
-                }
-                if(c[2].getRank() != c[3].getRank())
-                {
-                    spots[2] = true;
-                    return spots;
-                }
-                else
-                {
-                    spots[4] = true;
-                    return spots;
-                }
-            } 
-            else if (HandEvaluator.evaluateHand(c) == 1) //1 pair
-            {
-                if(c[0].getRank() == c[1].getRank())
-                {
-                    spots[2] = true;
-                    spots[3] = true;
-                    spots[4] = true;
-                    return spots;
-                }
-                else if(c[1].getRank() == c[2].getRank())
-                {
-                    spots[0] = true;
-                    spots[3] = true;
-                    spots[4] = true;
-                    return spots;
-                }
-                else if(c[2].getRank() == c[3].getRank())
-                {
-                    spots[0] = true;
-                    spots[1] = true;
-                    spots[4] = true;
-                    return spots;
-                }
-                else if(c[3].getRank() == c[4].getRank())
-                {
-                    spots[0] = true;
-                    spots[1] = true;
-                    spots[2] = true;
-                    return spots;
-                }
-
-            }
+            spots[3] = true; //swtich out the last two
+            spots[4] = true;
             return spots;
         }
-    }
+        else if(HandEvaluator.evaluateHand(c) == 2) //two pairs
+        {
+            if(c[0].getRank() != c[1].getRank())
+            {
+                spots[0] = true;
+                return spots;
 
+            }
+            if(c[2].getRank() != c[3].getRank())
+            {
+                spots[2] = true;
+                return spots;
+            }
+            else
+            {
+                spots[4] = true;
+                return spots;
+            }
+        } 
+        else if (HandEvaluator.evaluateHand(c) == 1) //1 pair
+        {
+            if(c[0].getRank() == c[1].getRank())
+            {
+                spots[2] = true;
+                spots[3] = true;
+                spots[4] = true;
+                return spots;
+            }
+            else if(c[1].getRank() == c[2].getRank())
+            {
+                spots[0] = true;
+                spots[3] = true;
+                spots[4] = true;
+                return spots;
+            }
+            else if(c[2].getRank() == c[3].getRank())
+            {
+                spots[0] = true;
+                spots[1] = true;
+                spots[4] = true;
+                return spots;
+            }
+            else if(c[3].getRank() == c[4].getRank())
+            {
+                spots[0] = true;
+                spots[1] = true;
+                spots[2] = true;
+                return spots;
+            }
+
+        }
+        return spots;
+    }
 
 
     // returns which cards to exchange; 
@@ -336,7 +337,7 @@ public class ThisDuude implements Strategy
             return findCombos(hand);
 
         if (HandEvaluator.evaluateHand(hand) == 6) //if a full house, don't switch anything
-        return exchange;
+            return exchange;
 
         int[] x = isClose(hand); //now see if it is close to a flush or straight
         if(x[0] == 1) //it is close
@@ -360,11 +361,11 @@ public class ThisDuude implements Strategy
     public void roundEnded()
     {
     }
-    
+
     public void playerExchanged(int seat, int numCardsExchanged)
     {
     }
-    
+
     public void playerActed(int seat, int action)
     {
     }
