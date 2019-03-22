@@ -360,4 +360,12 @@ public class ThisDuude implements Strategy
     public void roundEnded()
     {
     }
+    
+    public void playerExchanged(int seat, int numCardsExchanged)
+    {
+    }
+    
+    public void playerActed(int seat, int action)
+    {
+    }
 } 
