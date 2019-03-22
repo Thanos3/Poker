@@ -1,4 +1,4 @@
-public class LookAtThisDuude implements Strategy 
+public class ThisDuude implements Strategy 
 { 
     private Card[] hand;
     private int playerSeat;
