@@ -329,13 +329,13 @@ public class LookAtThisDuude implements Strategy
     { 
         boolean[] exchange = new boolean[5]; 
 
-        if (HandEvaluator.evaluateHand(hand) == 7) //if a straight flush, don't switch anything
+        if (HandEvaluator.evaluateHand(hand) == 8) //if a straight flush, don't switch anything
             return exchange;
 
-        if (HandEvaluator.evaluateHand(hand) == 6) //if a 4 of a kind, use findCombos to find what to replace
+        if (HandEvaluator.evaluateHand(hand) == 7) //if a 4 of a kind, use findCombos to find what to replace
             return findCombos(hand);
 
-        if (HandEvaluator.evaluateHand(hand) == 5) //if a full house, don't switch anything
+        if (HandEvaluator.evaluateHand(hand) == 6) //if a full house, don't switch anything
         return exchange;
 
         int[] x = isClose(hand); //now see if it is close to a flush or straight
