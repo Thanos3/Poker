@@ -348,6 +348,19 @@ public class ThisDuude implements Strategy
 
         if (HandEvaluator.evaluateHand(hand) == 3 || HandEvaluator.evaluateHand(hand) == 2 || HandEvaluator.evaluateHand(hand) == 1) //if 3 of a kind, 2 pairs, or 1 pair, return findCombos of the hand
             return findCombos(hand);
+            
+        if (HandEvaluator.evaluateHand(hand) == 0) //if there is a high card, exchange everything but that high hard
+        {
+            System.out.println("running high card exchange");
+            int[] highCardArray = highCard(hand);
+            int u = highCardArray[1];
+            for (int e = 0; e < 5; e++)
+            {
+                if (e != u)
+                exchange[e] = true;
+            }
+            return exchange; 
+        }
 
         //we could add a case for replacing everything but the high card. But i think we just fold in that case.
         // if we have nothing, we don't need to take a chance on that. We can play safe and preserve our chips for a better hand. 
