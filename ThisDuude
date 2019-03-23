@@ -351,7 +351,6 @@ public class ThisDuude implements Strategy
             
         if (HandEvaluator.evaluateHand(hand) == 0) //if there is a high card, exchange everything but that high hard
         {
-            System.out.println("running high card exchange");
             int[] highCardArray = highCard(hand);
             int u = highCardArray[1];
             for (int e = 0; e < 5; e++)
