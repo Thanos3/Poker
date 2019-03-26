@@ -20,6 +20,7 @@ public class ThisDuude implements Strategy
     // returns FOLD, CALL, or RAISE 
     public int act() 
     { 
+        System.out.println("Turn: " +turn);
         System.out.println("ThisDuude's hand: " + PokerUtil.handToString(hand));
         if(table.getCall()==4|| table.getPot() == 9)
         {
@@ -35,16 +36,40 @@ public class ThisDuude implements Strategy
 
             }
         }
-        if(turn == 1)
+        if(turn == 1) //first round of betting
         {
             if(PokerUtil.evaluateHand(hand) >= 2)//2 pairs or higher
             {
+
                 turn++;
                 return RAISE;
 
             }
+            else if (PokerUtil.evaluateHand(hand) == 1) //1 pair
+            {
+                if (rankOfPair(hand) < 6)
+                {
+                    if (table.getCall() > 1)
+                    {
+
+                        return FOLD;
+                    }
+                    turn++;
+                    return CALL;
+                }
+                if (table.getCall() > 1)
+                {
+                    turn++;
+                    return CALL;
+                }
+                turn++;
+
+                return RAISE;
+            }
             else if(PokerUtil.evaluateHand(hand) > 0 || isClose(hand)[0] == 1 || highCard(hand)[0] >= 10  )//1 pair or chance at straight/flush or high card
             {
+                if (table.getCall() > 1)
+                    return FOLD;
                 turn++;
                 return CALL;
             }
@@ -56,16 +81,41 @@ public class ThisDuude implements Strategy
             }
 
         } 
-        else
+        else //2nd round of betting
         {
 
             if(PokerUtil.evaluateHand(hand) >= 2)//2 pairs or higher
             {
-                return RAISE;
 
+                return RAISE;
+            }
+            else if (PokerUtil.evaluateHand(hand) == 1) //1 pair
+            {
+                if (rankOfPair(hand) < 6)
+                {
+                    if (table.getCall() > 1)
+                    {
+
+                        return FOLD;
+                    }
+                    turn++;
+                    return CALL;
+                }
+                if (table.getCall() > 1)
+                {
+                    turn++;
+                    return CALL;
+                }
+                turn++;
+
+                return RAISE;
             }
             else if(PokerUtil.evaluateHand(hand) > 0 ||  highCard(hand)[0] > 10  )//1 pair  or high card(face cards only)
             {
+                System.out.println("betting for high card");
+
+                if (table.getCall() > 1)
+                    return FOLD;
                 return CALL;
             }
             else
@@ -77,6 +127,33 @@ public class ThisDuude implements Strategy
 
         }
 
+    }
+
+    //returns the rank of the pair
+    //pre condition: hand has a single pair
+    public static int rankOfPair(Card[] theHand)
+    {
+        for (int i = 1; i < theHand.length; i++) //sorts the hand
+        {
+            for (int j = i; j > 0; j--)
+                if (theHand[j].getRank() > theHand[j - 1].getRank())
+                {
+                    Card savedCard = theHand[j];
+                    theHand[j] = theHand[j - 1];
+                    theHand[j - 1] = savedCard;
+                }
+        }
+
+        for (int i = 0; i < theHand.length; i++)
+        {
+            if (theHand[i].getRank() == theHand[i+1].getRank())
+            {
+                System.out.println("pair rank is " + theHand[i].getRank());
+                return theHand[i].getRank();
+            }
+        }
+        System.out.println("hi");
+        return -1; //wont happen
     }
 
     public static int[] isClose(Card[] theHand) //finds out if it is close to a straight/flush
@@ -324,14 +401,13 @@ public class ThisDuude implements Strategy
         return spots;
     }
 
-
     // returns which cards to exchange; 
     // for example, {true, false, true, false, false} means discard cards at index 0 and 2 
     //have the basic framework, need to figure out what to exchange in different scenarios
     public boolean[] exchange()  
     { 
         boolean[] exchange = new boolean[5];
-        
+
         System.out.println("PokerUtil says that ThisDuude's hand is " + PokerUtil.evaluateHand(hand));
 
         if (PokerUtil.evaluateHand(hand) == 8) //if a straight flush, don't switch anything
@@ -354,7 +430,6 @@ public class ThisDuude implements Strategy
         if (PokerUtil.evaluateHand(hand) == 3 || PokerUtil.evaluateHand(hand) == 2 || PokerUtil.evaluateHand(hand) == 1) //if 3 of a kind, 2 pairs, or 1 pair, return findCombos of the hand
             return findCombos(hand);
 
-            
         if (PokerUtil.evaluateHand(hand) == 0) //if there is a high card, exchange everything but that high hard
         {
             System.out.println("running high card exchange");
@@ -363,17 +438,17 @@ public class ThisDuude implements Strategy
             for (int e = 0; e < 5; e++)
             {
                 if (e != u)
-                exchange[e] = true;
+                    exchange[e] = true;
             }
             return exchange; 
         }
-        //we could add a case for replacing everything but the high card. But i think we just fold in that case.
-        // if we have nothing, we don't need to take a chance on that. We can play safe and preserve our chips for a better hand. 
+
         return exchange;
     } 
 
     public void exchanged(int handCategory, Card[] hand)
     {
+
     }
 
     public void roundEnded()
