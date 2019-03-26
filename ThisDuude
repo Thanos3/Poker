@@ -20,10 +20,11 @@ public class ThisDuude implements Strategy
     // returns FOLD, CALL, or RAISE 
     public int act() 
     { 
+        System.out.println("ThisDuude's hand: " + PokerUtil.handToString(hand));
         if(table.getCall()==4|| table.getPot() == 9)
         {
 
-            if(HandEvaluator.evaluateHand(hand) >= 2)//2 pairs or higher
+            if(PokerUtil.evaluateHand(hand) >= 2)//2 pairs or higher
 
                 return CALL;
 
@@ -36,13 +37,13 @@ public class ThisDuude implements Strategy
         }
         if(turn == 1)
         {
-            if(HandEvaluator.evaluateHand(hand) >= 2)//2 pairs or higher
+            if(PokerUtil.evaluateHand(hand) >= 2)//2 pairs or higher
             {
                 turn++;
                 return RAISE;
 
             }
-            else if(HandEvaluator.evaluateHand(hand) > 0 || isClose(hand)[0] == 1 || highCard(hand)[0] >= 10  )//1 pair or chance at straight/flush or high card
+            else if(PokerUtil.evaluateHand(hand) > 0 || isClose(hand)[0] == 1 || highCard(hand)[0] >= 10  )//1 pair or chance at straight/flush or high card
             {
                 turn++;
                 return CALL;
@@ -58,12 +59,12 @@ public class ThisDuude implements Strategy
         else
         {
 
-            if(HandEvaluator.evaluateHand(hand) >= 2)//2 pairs or higher
+            if(PokerUtil.evaluateHand(hand) >= 2)//2 pairs or higher
             {
                 return RAISE;
 
             }
-            else if(HandEvaluator.evaluateHand(hand) > 0 ||  highCard(hand)[0] > 10  )//1 pair  or high card(face cards only)
+            else if(PokerUtil.evaluateHand(hand) > 0 ||  highCard(hand)[0] > 10  )//1 pair  or high card(face cards only)
             {
                 return CALL;
             }
@@ -217,6 +218,7 @@ public class ThisDuude implements Strategy
     //returns array of booleans of the cards that should be removed
     public boolean[] findCombos(Card[] c)
     {
+        System.out.println("running find combos exchange");
         for (int i = 1; i < c.length; i++) //sorts the hand
         {
             for (int j = i; j > 0; j--)
@@ -231,7 +233,7 @@ public class ThisDuude implements Strategy
         boolean[] spots = new boolean[5];
 
         //looks for 4 of a kind, tries to get a high card for the 5th
-        if(HandEvaluator.evaluateHand(c) == 7)
+        if(PokerUtil.evaluateHand(c) == 7)
         {
             if(c[0] != c[1])
             {
@@ -250,7 +252,7 @@ public class ThisDuude implements Strategy
                 return spots;
             }
         }
-        if(HandEvaluator.evaluateHand(c) == 3) //three of a kind
+        if(PokerUtil.evaluateHand(c) == 3) //three of a kind
         {
             if(c[0] != c[1]) 
             {
@@ -268,7 +270,7 @@ public class ThisDuude implements Strategy
             spots[4] = true;
             return spots;
         }
-        else if(HandEvaluator.evaluateHand(c) == 2) //two pairs
+        else if(PokerUtil.evaluateHand(c) == 2) //two pairs
         {
             if(c[0].getRank() != c[1].getRank())
             {
@@ -287,7 +289,7 @@ public class ThisDuude implements Strategy
                 return spots;
             }
         } 
-        else if (HandEvaluator.evaluateHand(c) == 1) //1 pair
+        else if (PokerUtil.evaluateHand(c) == 1) //1 pair
         {
             if(c[0].getRank() == c[1].getRank())
             {
@@ -328,29 +330,34 @@ public class ThisDuude implements Strategy
     //have the basic framework, need to figure out what to exchange in different scenarios
     public boolean[] exchange()  
     { 
-        boolean[] exchange = new boolean[5]; 
+        boolean[] exchange = new boolean[5];
+        
+        System.out.println("PokerUtil says that ThisDuude's hand is " + PokerUtil.evaluateHand(hand));
 
-        if (HandEvaluator.evaluateHand(hand) == 8) //if a straight flush, don't switch anything
+        if (PokerUtil.evaluateHand(hand) == 8) //if a straight flush, don't switch anything
             return exchange;
 
-        if (HandEvaluator.evaluateHand(hand) == 7) //if a 4 of a kind, use findCombos to find what to replace
+        if (PokerUtil.evaluateHand(hand) == 7) //if a 4 of a kind, use findCombos to find what to replace
             return findCombos(hand);
 
-        if (HandEvaluator.evaluateHand(hand) == 6) //if a full house, don't switch anything
+        if (PokerUtil.evaluateHand(hand) == 6) //if a full house, don't switch anything
             return exchange;
 
         int[] x = isClose(hand); //now see if it is close to a flush or straight
         if(x[0] == 1) //it is close
         {
+            System.out.println("thinks that it is close");
             exchange[x[1]] = true; 
             return exchange;
         }
 
-        if (HandEvaluator.evaluateHand(hand) == 3 || HandEvaluator.evaluateHand(hand) == 2 || HandEvaluator.evaluateHand(hand) == 1) //if 3 of a kind, 2 pairs, or 1 pair, return findCombos of the hand
+        if (PokerUtil.evaluateHand(hand) == 3 || PokerUtil.evaluateHand(hand) == 2 || PokerUtil.evaluateHand(hand) == 1) //if 3 of a kind, 2 pairs, or 1 pair, return findCombos of the hand
             return findCombos(hand);
+
             
-        if (HandEvaluator.evaluateHand(hand) == 0) //if there is a high card, exchange everything but that high hard
+        if (PokerUtil.evaluateHand(hand) == 0) //if there is a high card, exchange everything but that high hard
         {
+            System.out.println("running high card exchange");
             int[] highCardArray = highCard(hand);
             int u = highCardArray[1];
             for (int e = 0; e < 5; e++)
@@ -360,7 +367,6 @@ public class ThisDuude implements Strategy
             }
             return exchange; 
         }
-
         //we could add a case for replacing everything but the high card. But i think we just fold in that case.
         // if we have nothing, we don't need to take a chance on that. We can play safe and preserve our chips for a better hand. 
         return exchange;
