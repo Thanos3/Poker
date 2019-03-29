@@ -6,6 +6,9 @@ public class ThisDuude implements Strategy
     private int turn;
     private int numRaises;
     private TableView table;
+    private int opponentsPower;
+    private int[] seatPowers;
+    
     public void deal(int seat, int handCategory, Card[] h, TableView tableView)
     {
         hand = h;
@@ -14,16 +17,22 @@ public class ThisDuude implements Strategy
         turn = 1;
         numRaises = 0;
         table = tableView;
+        opponentsPower= 0;
+        seatPowers = new int[tableView.getSize()];
+        seatPowers[seat] = 0;
     }
 
     // called when it's this player's turn during betting 
     // returns FOLD, CALL, or RAISE 
     public int act() 
     { 
-        System.out.println("Turn: " +turn);
-        System.out.println("ThisDuude's hand: " + PokerUtil.handToString(hand));
-        if(table.getCall()==4|| table.getPot() == 9)
+        //have betting cases for 4-5 players and 2-3 players. current is 2-3 players
+        if(table.getCall() >2|| table.getPot() == 9) 
         {
+            if(PokerUtil.evaluateHand(hand) >= 3)
+            {
+                return RAISE;
+            }
 
             if(PokerUtil.evaluateHand(hand) >= 2)//2 pairs or higher
 
@@ -41,41 +50,42 @@ public class ThisDuude implements Strategy
             if(PokerUtil.evaluateHand(hand) >= 2)//2 pairs or higher
             {
 
-                turn++;
+                
                 return RAISE;
 
             }
             else if (PokerUtil.evaluateHand(hand) == 1) //1 pair
             {
-                if (rankOfPair(hand) < 6)
+                if (rankOfPair(hand) < 6) 
                 {
-                    if (table.getCall() > 1)
+                    if (table.getCall() > 1) //2
                     {
 
                         return FOLD;
                     }
-                    turn++;
+                    
                     return CALL;
                 }
-                if (table.getCall() > 1)
+                
+                if (table.getCall() > 0) 
                 {
-                    turn++;
+                    
                     return CALL;
                 }
-                turn++;
+                
 
                 return RAISE;
             }
-            else if(PokerUtil.evaluateHand(hand) > 0 || isClose(hand)[0] == 1 || highCard(hand)[0] >= 10  )//1 pair or chance at straight/flush or high card
+            else if(PokerUtil.evaluateHand(hand) > 0 || isClose(hand)[0] == 1 )//1 pair or chance at straight/flush or high card
             {
                 if (table.getCall() > 1)
                     return FOLD;
-                turn++;
+                
                 return CALL;
             }
             else
             {
-                turn++; 
+                
                 return FOLD; //nothing in hand
 
             }
@@ -84,35 +94,46 @@ public class ThisDuude implements Strategy
         else //2nd round of betting
         {
 
-            if(PokerUtil.evaluateHand(hand) >= 2)//2 pairs or higher
+            if(PokerUtil.evaluateHand(hand) >= 5)
             {
+                if (getOpponentsPower() == 4)
+                return CALL;
 
+                return RAISE;
+            }
+            else if (PokerUtil.evaluateHand(hand) >= 2)
+            {
+                if (getOpponentsPower() >= 3)
+                return CALL;
+                
                 return RAISE;
             }
             else if (PokerUtil.evaluateHand(hand) == 1) //1 pair
             {
-                if (rankOfPair(hand) < 6)
+                if (getOpponentsPower() >= 2)
+                return FOLD;
+                if (rankOfPair(hand) < 12) 
                 {
                     if (table.getCall() > 1)
                     {
 
                         return FOLD;
                     }
-                    turn++;
+                    
                     return CALL;
                 }
-                if (table.getCall() > 1)
+                if (table.getCall() > 0) 
                 {
-                    turn++;
+                    
                     return CALL;
                 }
-                turn++;
+                
 
                 return RAISE;
             }
-            else if(PokerUtil.evaluateHand(hand) > 0 ||  highCard(hand)[0] > 10  )//1 pair  or high card(face cards only)
+            else if(PokerUtil.evaluateHand(hand) > 0   )//1 pair  or high card(face cards only)
             {
-                System.out.println("betting for high card");
+                
 
                 if (table.getCall() > 1)
                     return FOLD;
@@ -148,11 +169,11 @@ public class ThisDuude implements Strategy
         {
             if (theHand[i].getRank() == theHand[i+1].getRank())
             {
-                System.out.println("pair rank is " + theHand[i].getRank());
+                
                 return theHand[i].getRank();
             }
         }
-        System.out.println("hi");
+        
         return -1; //wont happen
     }
 
@@ -295,7 +316,7 @@ public class ThisDuude implements Strategy
     //returns array of booleans of the cards that should be removed
     public boolean[] findCombos(Card[] c)
     {
-        System.out.println("running find combos exchange");
+        
         for (int i = 1; i < c.length; i++) //sorts the hand
         {
             for (int j = i; j > 0; j--)
@@ -408,7 +429,7 @@ public class ThisDuude implements Strategy
     { 
         boolean[] exchange = new boolean[5];
 
-        System.out.println("PokerUtil says that ThisDuude's hand is " + PokerUtil.evaluateHand(hand));
+        
 
         if (PokerUtil.evaluateHand(hand) == 8) //if a straight flush, don't switch anything
             return exchange;
@@ -422,7 +443,7 @@ public class ThisDuude implements Strategy
         int[] x = isClose(hand); //now see if it is close to a flush or straight
         if(x[0] == 1) //it is close
         {
-            System.out.println("thinks that it is close");
+          
             exchange[x[1]] = true; 
             return exchange;
         }
@@ -432,7 +453,7 @@ public class ThisDuude implements Strategy
 
         if (PokerUtil.evaluateHand(hand) == 0) //if there is a high card, exchange everything but that high hard
         {
-            System.out.println("running high card exchange");
+            
             int[] highCardArray = highCard(hand);
             int u = highCardArray[1];
             for (int e = 0; e < 5; e++)
@@ -454,9 +475,53 @@ public class ThisDuude implements Strategy
     public void roundEnded()
     {
     }
+    
+    public int getOpponentsPower()
+    {
+        int highest = -2;
+        for (int x = 0; x < seatPowers.length; x++)
+        {
+            if (x != playerSeat)
+            {
+                if (seatPowers[x] > highest)
+                highest = seatPowers[x];
+            }
+        }
+        return highest;
+    }
 
     public void playerExchanged(int seat, int numCardsExchanged)
     {
+        if (turn == 1)
+        turn = 2;
+        
+        if (seat != playerSeat)
+        {
+            if (numCardsExchanged == 0)
+            {
+                seatPowers[seat] = 4;
+            }
+            if (numCardsExchanged == 1)
+            {
+                seatPowers[seat] = 2;
+            }
+            if (numCardsExchanged == 2)
+            {
+                seatPowers[seat] = 2;
+            }
+            if (numCardsExchanged == 3)
+            {
+                seatPowers[seat] = 1;
+            }
+            if (numCardsExchanged == 4)
+            {
+                seatPowers[seat] = 0;
+            }
+            if (numCardsExchanged == 5)
+            {
+                seatPowers[seat] = -1;
+            }
+        }
     }
 
     public void playerActed(int seat, int action)
