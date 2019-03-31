@@ -8,7 +8,7 @@ public class ThisDuude implements Strategy
     private TableView table;
     private int opponentsPower;
     private int[] seatPowers;
-    
+
     public void deal(int seat, int handCategory, Card[] h, TableView tableView)
     {
         hand = h;
@@ -27,129 +27,217 @@ public class ThisDuude implements Strategy
     public int act() 
     { 
         //have betting cases for 4-5 players and 2-3 players. current is 2-3 players
-        if(table.getCall() >2|| table.getPot() == 9) 
+        if (table.getSize() <= 3)
         {
-            if(PokerUtil.evaluateHand(hand) >= 3)
+            if(table.getCall() >2|| table.getPot() == 9) 
             {
-                return RAISE;
-            }
-
-            if(PokerUtil.evaluateHand(hand) >= 2)//2 pairs or higher
-
-                return CALL;
-
-            else
-            {
-
-                return FOLD; //nothing in hand
-
-            }
-        }
-        if(turn == 1) //first round of betting
-        {
-            if(PokerUtil.evaluateHand(hand) >= 2)//2 pairs or higher
-            {
-
-                
-                return RAISE;
-
-            }
-            else if (PokerUtil.evaluateHand(hand) == 1) //1 pair
-            {
-                if (rankOfPair(hand) < 6) 
+                if(PokerUtil.evaluateHand(hand) >= 3)
                 {
-                    if (table.getCall() > 1) //2
+                    return RAISE;
+                }
+
+                if(PokerUtil.evaluateHand(hand) >= 2)//2 pairs or higher
+
+                    return CALL;
+
+                else
+                {
+
+                    return FOLD; //nothing in hand
+
+                }
+            }
+            if(turn == 1) //first round of betting
+            {
+                if(PokerUtil.evaluateHand(hand) >= 2)//2 pairs or higher
+                {
+
+                    return RAISE;
+                }
+                else if (PokerUtil.evaluateHand(hand) == 1) //1 pair
+                {
+                    if (rankOfPair(hand) < 6) 
+                    {
+                        if (table.getCall() > 1) //2
+                        {
+
+                            return FOLD;
+                        }
+
+                        return CALL;
+                    }
+
+                    if (table.getCall() > 0) 
                     {
 
-                        return FOLD;
+                        return CALL;
                     }
-                    
-                    return CALL;
+
+                    return RAISE;
                 }
-                
-                if (table.getCall() > 0) 
-                {
-                    
-                    return CALL;
-                }
-                
-
-                return RAISE;
-            }
-            else if(PokerUtil.evaluateHand(hand) > 0 || isClose(hand)[0] == 1 )//1 pair or chance at straight/flush or high card
-            {
-                if (table.getCall() > 1)
-                    return FOLD;
-                
-                return CALL;
-            }
-            else
-            {
-                
-                return FOLD; //nothing in hand
-
-            }
-
-        } 
-        else //2nd round of betting
-        {
-
-            if(PokerUtil.evaluateHand(hand) >= 5)
-            {
-                if (getOpponentsPower() == 4)
-                return CALL;
-
-                return RAISE;
-            }
-            else if (PokerUtil.evaluateHand(hand) >= 2)
-            {
-                if (getOpponentsPower() >= 3)
-                return CALL;
-                
-                return RAISE;
-            }
-            else if (PokerUtil.evaluateHand(hand) == 1) //1 pair
-            {
-                if (getOpponentsPower() >= 2)
-                return FOLD;
-                if (rankOfPair(hand) < 12) 
+                else if(PokerUtil.evaluateHand(hand) > 0 || isClose(hand)[0] == 1 )//1 pair or chance at straight/flush or high card
                 {
                     if (table.getCall() > 1)
+                        return FOLD;
+
+                    return CALL;
+                }
+                else
+                {
+
+                    return FOLD; //nothing in hand
+
+                }
+
+            } 
+            else //2nd round of betting
+            {
+
+                if(PokerUtil.evaluateHand(hand) >= 5)
+                {
+                    if (getOpponentsPower() == 4)
+                        return CALL;
+
+                    return RAISE;
+                }
+                else if (PokerUtil.evaluateHand(hand) >= 2)
+                {
+                    if (getOpponentsPower() >= 3)
+                        return CALL;
+
+                    return RAISE;
+                }
+                else if (PokerUtil.evaluateHand(hand) == 1) //1 pair
+                {
+                    if (getOpponentsPower() >= 2)
+                        return FOLD;
+                    if (rankOfPair(hand) < 12) 
+                    {
+                        if (table.getCall() > 1)
+                        {
+
+                            return FOLD;
+                        }
+
+                        return CALL;
+                    }
+                    if (table.getCall() > 0) 
                     {
 
-                        return FOLD;
+                        return CALL;
                     }
-                    
+
+                    return RAISE;
+                }
+                else if(PokerUtil.evaluateHand(hand) > 0   )//1 pair  or high card(face cards only)
+                {
+
+                    if (table.getCall() > 1)
+                        return FOLD;
                     return CALL;
                 }
-                if (table.getCall() > 0) 
+                else
+                {
+
+                    return FOLD; //nothing in hand
+
+                }
+
+            }
+        }
+        else //table.size() is greater than 3
+        {
+
+            
+            if(turn == 1) //first round of betting
+            {
+                if(PokerUtil.evaluateHand(hand) >= 2)//2 pairs or higher
+                {
+
+                    return RAISE;
+                }
+                else if (PokerUtil.evaluateHand(hand) == 1) //1 pair
                 {
                     
+
+                    if (table.getCall() > 0) 
+                    {
+
+                        return CALL;
+                    }
+
+                    return RAISE;
+                }
+                else if(PokerUtil.evaluateHand(hand) > 0 || isClose(hand)[0] == 1 )//1 pair or chance at straight/flush or high card
+                {
+                    if (table.getCall() > 2)
+                        return FOLD;
+
+                    return CALL;
+                }
+                else
+                {
+
+                    return FOLD; //nothing in hand
+
+                }
+
+            } 
+            else //2nd round of betting
+            {
+
+                if(PokerUtil.evaluateHand(hand) >= 5)
+                {
+                    if (getOpponentsPower() == 4)
+                        return CALL;
+
+                    return RAISE;
+                }
+                else if (PokerUtil.evaluateHand(hand) >= 2)
+                {
+                    if (getOpponentsPower() >= 3)
+                        return CALL;
+
+                    return RAISE;
+                }
+                else if (PokerUtil.evaluateHand(hand) == 1) //1 pair
+                {
+                    if (getOpponentsPower() >= 2)
+                        return FOLD;
+                        if (getOpponentsPower() < 1) 
+                    {
+                        
+                        return CALL;
+                    }
+                    if (getOpponentsPower() == 1) //they have 1 pair
+                    {
+                        rankOfPair(hand);
+                        
+                            if (table.getCall() > 1)
+                            {
+
+                                return FOLD;
+                            }
+
+                            return CALL;
+                        
+                        
+                        
+                    }
                     return CALL;
                 }
                 
-
-                return RAISE;
-            }
-            else if(PokerUtil.evaluateHand(hand) > 0   )//1 pair  or high card(face cards only)
-            {
                 
+                else
+                {
 
-                if (table.getCall() > 1)
-                    return FOLD;
-                return CALL;
-            }
-            else
-            {
+                    return FOLD; //nothing in hand
 
-                return FOLD; //nothing in hand
+                }
 
             }
-
         }
-
     }
-
     //returns the rank of the pair
     //pre condition: hand has a single pair
     public static int rankOfPair(Card[] theHand)
@@ -169,11 +257,11 @@ public class ThisDuude implements Strategy
         {
             if (theHand[i].getRank() == theHand[i+1].getRank())
             {
-                
+
                 return theHand[i].getRank();
             }
         }
-        
+
         return -1; //wont happen
     }
 
@@ -316,7 +404,7 @@ public class ThisDuude implements Strategy
     //returns array of booleans of the cards that should be removed
     public boolean[] findCombos(Card[] c)
     {
-        
+
         for (int i = 1; i < c.length; i++) //sorts the hand
         {
             for (int j = i; j > 0; j--)
@@ -429,8 +517,6 @@ public class ThisDuude implements Strategy
     { 
         boolean[] exchange = new boolean[5];
 
-        
-
         if (PokerUtil.evaluateHand(hand) == 8) //if a straight flush, don't switch anything
             return exchange;
 
@@ -443,7 +529,7 @@ public class ThisDuude implements Strategy
         int[] x = isClose(hand); //now see if it is close to a flush or straight
         if(x[0] == 1) //it is close
         {
-          
+
             exchange[x[1]] = true; 
             return exchange;
         }
@@ -453,7 +539,7 @@ public class ThisDuude implements Strategy
 
         if (PokerUtil.evaluateHand(hand) == 0) //if there is a high card, exchange everything but that high hard
         {
-            
+
             int[] highCardArray = highCard(hand);
             int u = highCardArray[1];
             for (int e = 0; e < 5; e++)
@@ -475,7 +561,7 @@ public class ThisDuude implements Strategy
     public void roundEnded()
     {
     }
-    
+
     public int getOpponentsPower()
     {
         int highest = -2;
@@ -484,7 +570,7 @@ public class ThisDuude implements Strategy
             if (x != playerSeat)
             {
                 if (seatPowers[x] > highest)
-                highest = seatPowers[x];
+                    highest = seatPowers[x];
             }
         }
         return highest;
@@ -493,8 +579,8 @@ public class ThisDuude implements Strategy
     public void playerExchanged(int seat, int numCardsExchanged)
     {
         if (turn == 1)
-        turn = 2;
-        
+            turn = 2;
+
         if (seat != playerSeat)
         {
             if (numCardsExchanged == 0)
@@ -519,7 +605,7 @@ public class ThisDuude implements Strategy
             }
             if (numCardsExchanged == 5)
             {
-                seatPowers[seat] = -1;
+                seatPowers[seat] = 0;
             }
         }
     }
