@@ -8,7 +8,7 @@ public class ThisDuude implements Strategy
     private TableView table;
     private int opponentsPower;
     private int[] seatPowers;
-
+    private ArrayList<int> bluffResults;
     public void deal(int seat, int handCategory, Card[] h, TableView tableView)
     {
         hand = h;
@@ -20,6 +20,7 @@ public class ThisDuude implements Strategy
         opponentsPower= 0;
         seatPowers = new int[tableView.getSize()];
         seatPowers[seat] = 0;
+        bluffResults = new ArrayList<int>();
     }
 
     // called when it's this player's turn during betting 
@@ -575,6 +576,30 @@ public class ThisDuude implements Strategy
         }
         return highest;
     }
+   //written to protect against a potentially bluffing bot during a 1v1 scenario.
+   //uses the bluff results list to analyze outcomes of an opponent's bluff, namely when 0 cards are exchanged and the hand has minimal power. 
+   public void protectBluff(int seat) 
+    {
+    int wins = 0;
+    int losses = 0;
+    for(int x = 0; x < bluffResults.size(); x ++)
+    {
+    if(bluffResults.get(x) == 1)
+    wins++;
+    else
+    losses++;
+    
+    }
+    if(wins>losses)
+    {
+    
+    
+    }
+    
+    
+    
+    }
+
 
     public void playerExchanged(int seat, int numCardsExchanged)
     {
