@@ -590,7 +590,7 @@ public class ThisDuude implements Strategy
     losses++;
     
     }
-    if(wins>losses)
+    if(wins<losses)
     {
     
     
